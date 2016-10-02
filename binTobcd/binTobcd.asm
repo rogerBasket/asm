@@ -72,7 +72,7 @@ ciclo:
 	lsl decena
 	out PortD,decena
 
-	cpi counter,255
+	cpi counter,140
 	brne ciclo
 
 	rcall count
