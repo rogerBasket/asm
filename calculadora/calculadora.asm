@@ -84,6 +84,8 @@ calcu3:
 	mov oper2,oper1
 	andi oper1,0x03
 	andi oper2,0x0c
+	lsr oper2
+	lsr oper2
 	add oper1,oper2
 	out PortB,oper1
 	rjmp init
@@ -97,8 +99,10 @@ calcu5:
 	mov oper1,oper2
 	andi oper1,0x03
 	andi oper2,0x0c
-	sub oper1,oper2
-	out PortB,oper1
+	lsr oper2
+	lsr oper2
+	sub oper2,oper1
+	out PortB,oper2
 	rjmp init
 
 calcu6:
@@ -110,6 +114,8 @@ calcu7:
 	mov oper2,oper1
 	andi oper1,0x03
 	andi oper2,0x0c
+	lsr oper2
+	lsr oper2
 	mul oper1,oper2
 	mov resul,r0
 	out PortB,resul

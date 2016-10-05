@@ -2,12 +2,10 @@
 
 .include "/home/roger/arduino-asm/m328Pdef.inc"
 
-.def entrada = r16
-.def salida = r17
-.def temp = r18
-.def counter = r19
-.def aux = r20
-.def registro = r21
+.def aux = r16
+.def counter = r17
+.def registro = r18
+.def temp = r19
 
 .org 0x0000
 	rjmp reset
@@ -28,37 +26,32 @@ reset:
    clr temp
    out TCNT0,temp       ; initialize the Timer/Counter to 0
 
-; configuracion de entrada
+; configuracion de aux
 
-ldi entrada,0x00
-out DDRD,entrada
+ldi aux,0x00
+out DDRD,aux
 
-; configuracion de salida
+; configuracion de aux
 
-ldi salida,0xff
-out DDRB,salida
+ldi aux,0xff
+out DDRB,aux
 
-ldi salida,0x30
-out DDRC,salida
+ldi aux,0x30
+out DDRC,aux
 
-; valor de entradas
+; valor de auxs
 
-ldi entrada,0xff
-out PortD,entrada
+ldi aux,0xff
+out PortD,aux
 
 init:
 	in temp,PinD
 	out PortB,temp
 	mov registro,temp
 	ldi counter,0x00
-	ldi entrada,0x00
 
 ciclo:
 	rcall segundos
-	
-	cpi entrada,8
-	breq init
-
 	rcall datos
 
 	cp aux,temp
@@ -67,15 +60,25 @@ ciclo:
 	rjmp ciclo
 
 rotar:
+	clr counter
 	rol registro
-	mov salida,registro
+	brcs carry
+
+	rjmp salida
+
+carry:
+	inc registro
+	rjmp salida
+
+salida:
+	mov aux,registro
+
 	out PortB,registro
 
-	lsr salida
-	lsr salida
-	out PortC,salida
+	lsr aux
+	lsr aux
+	out PortC,aux
 
-	clr counter
 	reti
 
 datos:
@@ -84,9 +87,8 @@ datos:
 
 segundos:
 	cpi counter,122
-	brne PC+3
+	brne PC+2
 	rcall rotar
-	inc entrada
 	reti
 
 timer:
